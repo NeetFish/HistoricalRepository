@@ -1,0 +1,18 @@
+¿N¦×
+ªoÂû
+Àn»L
+¤TÄ_
+
+ÂûÀn
+
+
+27830030
+
+
+
+curl -H'Authorization: 3f2410e1-8644-4308-8baa-9291f7812132' 'http://140.109.17.71:8080/api/action/resource_update' --form upload=@newfiletoupload --form id=asfasfe33
+
+
+curl -H'Authorization: 3f2410e1-8644-4308-8baa-9291f7812132' 'http://140.109.17.71/api/action/resource_create' -F'upload=@/hi.txt' -F'package_id=asfasfe33' -F'url='
+
+package_id=asfasfe33;url="
