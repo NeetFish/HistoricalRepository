@@ -73,11 +73,11 @@
         <div id="uploadBack">
             <h2>Upload to repository</h2>
             <div id="uploadDiv">
-                <asp:FileUpload ID="FileUp" runat="server" />
+                <h5>日期  </h5><asp:TextBox ID="uploadName" runat="server"></asp:TextBox>
                 <br />
-                <asp:TextBox ID="uploadName" runat="server"></asp:TextBox>
+                <h5>檔案上傳  </h5><asp:FileUpload ID="FileUp" runat="server" />
                 <br />
-                <asp:DropDownList ID="DropDownList1" runat="server">
+                <h5>災害類別  </h5><asp:DropDownList ID="DropDownList1" runat="server">
                     <asp:ListItem>Earthquake</asp:ListItem>
                     <asp:ListItem>Typhoon</asp:ListItem>
                 </asp:DropDownList>

@@ -36,22 +36,22 @@ namespace WebApplication2
                 {
                     var files = new[]
                     {
-                    new UploadFile
-                    {
-                        Name = "upload",
-                        //Filename = "hi.txt",
-                        Filename = FileUp.FileName,
-                        ContentType = "text/plain",
-                        Stream = stream1
-                    }
-                };
+                        new UploadFile
+                        {
+                            Name = "upload",
+                            //Filename = "hi.txt",
+                            Filename = FileUp.FileName,
+                            ContentType = "text/plain",
+                            Stream = stream1
+                        }
+                    };
 
                     var values = new NameValueCollection
-                {
-                    { "package_id", "earthquake" },
-                    { "url", "" },
-                    { "name", uploadName.Text },
-                };
+                    {
+                        { "package_id", "earthquake" },
+                        { "url", "" },
+                        { "name", uploadName.Text },
+                    };
 
                     byte[] result = upF.UploadFiles("http://140.109.17.71/api/action/resource_create", files, values);
                 }
