@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Index.aspx.cs" Inherits="WebApplication2.WebForm1" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Index.aspx.cs" Inherits="Temp_Historical.WebForm1" %>
 
 <!DOCTYPE html>
 
@@ -7,7 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Historical Hazard Data Repository</title>
 
-    <link rel="stylesheet" href="jquery-ui.css">
+    <link rel="stylesheet" href="jquery-ui.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="ui.jqgrid.css" />
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
@@ -73,7 +73,7 @@
         <div id="uploadBack">
             <h2>Upload to repository</h2>
             <div id="uploadDiv">
-                <h5>日期  </h5><asp:TextBox ID="uploadName" runat="server"></asp:TextBox>
+                <h5>日期  </h5><input id="uploaddatepicker" runat="server" type="text" /><br /><br /><asp:TextBox ID="uploadName" runat="server"></asp:TextBox>
                 <br />
                 <h5>檔案上傳  </h5><asp:FileUpload ID="FileUp" runat="server" />
                 <br />
@@ -133,6 +133,7 @@
     $(document).ready(function () {
         $("#startdatepicker").datepicker({ "dateFormat": "yy-mm-dd" });
         $("#enddatepicker").datepicker({ "dateFormat": "yy-mm-dd" });
+        $("#uploaddatepicker").datepicker({ "dateFormat": "yy-mm-dd" });
     });
 
 

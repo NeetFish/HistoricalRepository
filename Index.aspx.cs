@@ -8,12 +8,12 @@ using System.Net;
 using System.Text;
 using System.IO;
 using System.Diagnostics;
-using WebApplication2.Models;
-using WebApplication2.Upload;
+using Temp_Historical.Models;
+using Temp_Historical.Upload;
 using System.Collections.Specialized;
 using Newtonsoft.Json;
 
-namespace WebApplication2
+namespace Temp_Historical
 {
     public partial class WebForm1 : System.Web.UI.Page
     {
@@ -26,6 +26,8 @@ namespace WebApplication2
         protected void Button1_Click1(object sender, EventArgs e)
         {
 
+            string[] datasetSplit = uploaddatepicker.Value.Split('-');
+            string datasetName = datasetSplit[0] + datasetSplit[1] + datasetSplit[2];
 
             if (FileUp.HasFile)
             {
@@ -48,7 +50,7 @@ namespace WebApplication2
 
                     var values = new NameValueCollection
                     {
-                        { "package_id", "earthquake" },
+                        { "package_id", datasetName },
                         { "url", "" },
                         { "name", uploadName.Text },
                     };
