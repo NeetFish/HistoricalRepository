@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using WebApplication2.Models;
-using System.Web.Script.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Net;
@@ -24,6 +21,9 @@ namespace WebApplication2.Models
         private string Time;
         private string Intensity;
 
+        private string startTime;
+        private string endTime;
+
         public List<Earthquake> EarthquakeTrans(object earthquakeEvent, Earthquake.DataSource dataSource, 
                                                 string Domain, string LatLng, string Time, string Intensity)
         {
@@ -32,6 +32,10 @@ namespace WebApplication2.Models
             this.Time = Time;
             this.Intensity = Intensity;
             eqList.Clear();
+
+            if (earthquakeEvent == null)
+                return null;
+
             switch (dataSource)
             {
                 case Earthquake.DataSource.PALERT:
@@ -48,16 +52,46 @@ namespace WebApplication2.Models
                     return eqList;
 
                 case Earthquake.DataSource.CKAN:
-                    //List<Ckan> ckanEventList = JsonConvert.DeserializeObject<List<Ckan>>((string)earthquakeEvent);
                     JObject ckanlist = JObject.Parse((string)earthquakeEvent);
                     ckanTrans(ckanlist);
 
-                    /*
-                    foreach (Ckan ckanEvent in ckanEventList)
+                    return eqList;
+                default:
+                    break;
+            }
+
+            // DEBUG
+            return null;
+        }
+        public List<Earthquake> EarthquakeTrans(object earthquakeEvent, Earthquake.DataSource dataSource,
+                                                string startTime, string endTime)
+        {
+            eqList.Clear();
+            this.startTime = startTime;
+            this.endTime = endTime;
+
+            if (earthquakeEvent == null)
+                return null;
+
+            switch (dataSource)
+            {
+                case Earthquake.DataSource.PALERT:
+                    List<Palert> palertEventList = JsonConvert.DeserializeObject<List<Palert>>((string)earthquakeEvent);
+                    foreach (Palert palertEvent in palertEventList)
                     {
-                        Earthquake eq = ckanTrans(ckanEvent);
+                        Earthquake eq = palertTrans(palertEvent);
                         eqList.Add(eq);
-                    }*/
+                    }
+                    return eqList;
+
+                case Earthquake.DataSource.CWB:
+                    cwbTrans((string)earthquakeEvent);
+                    return eqList;
+
+                case Earthquake.DataSource.CKAN:
+                    JObject ckanlist = JObject.Parse((string)earthquakeEvent);
+                    ckanTrans(ckanlist);
+
                     return eqList;
                 default:
                     break;
@@ -230,24 +264,27 @@ namespace WebApplication2.Models
 
         private void ckanTrans(JObject ckanlist)
         {
-            IList<JToken> results = ckanlist["result"]["resources"].Children().ToList();
+            IList<JToken> results = ckanlist["result"]["packages"].Children().ToList();
             IList<Ckan> ckanList = new List<Ckan>();  
             foreach (JToken result in results)
             {
 
                 // The JSON file name format is equal to timestring
                 string name = result["name"].ToString();
-                string[] dateParse = Time.Split('&','-');
+                //string[] dateParse = Time.Split('&','-');
+                string[] dateParse = (startTime + '&' + endTime).Split('&', '-');
 
 
-
-                if (name == "Placeholder")
-                    continue;
-
+                // Find the Dataset
                 if (int.Parse(name.Substring(0,8)) >= int.Parse(dateParse[0] + dateParse[1] + dateParse[2] ) && 
                     int.Parse(name.Substring(0,8)) <= int.Parse(dateParse[3] + dateParse[4] + dateParse[5] ))
                 {
-                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(result["url"].ToString());
+
+                    // Go to the dataset and take out the earthquake data
+                    //string dataset_url = "http://140.109.17.71/api/3/action/package_show?id=" + name;
+                    string dataset_url = ConstCkan.CkanAPIPrefix + "/package_show?id=" + name;
+
+                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(dataset_url);
                     request.Method = WebRequestMethods.Http.Get;
                     request.ContentType = "application/json";
 
@@ -261,13 +298,37 @@ namespace WebApplication2.Models
 
                                 string data = reader.ReadToEnd();
 
-                                Ckan ckan = JsonConvert.DeserializeObject<Ckan>(data.ToString());
-                                Earthquake eq = new Earthquake(ckan.Timestring, ckan.Lat, ckan.Lng, ckan.Depth, ckan.Magnitude, Earthquake.DataSource.CKAN, result["url"].ToString());
-                                eqList.Add(eq);
+                                JObject datalist = JObject.Parse(data);
+                                IList<JToken> datalist_JSON = datalist["result"]["resources"].Children().ToList();
 
+                                foreach (JToken dataResult in datalist_JSON)
+                                {
+                                    string dataName = dataResult["name"].ToString();
+
+                                    if (dataName == name)
+                                    {
+                                        HttpWebRequest request2 = (HttpWebRequest)WebRequest.Create(dataResult["url"].ToString());
+                                        request2.Method = WebRequestMethods.Http.Get;
+                                        request2.ContentType = "application/json";
+                                        using (var response2 = (HttpWebResponse)request2.GetResponse())
+                                        {
+                                            if (response2.StatusCode == HttpStatusCode.OK)
+                                            {
+                                                using (var stream2 = response2.GetResponseStream())
+                                                using (var reader2 = new StreamReader(stream2))
+                                                {
+                                                    string data2 = reader2.ReadToEnd();
+
+                                                    Ckan ckan = JsonConvert.DeserializeObject<Ckan>(data2.ToString());
+                                                    Earthquake eq = new Earthquake(ckan.Timestring, ckan.Lat, ckan.Lng, ckan.Depth, ckan.Magnitude, Earthquake.DataSource.CKAN, "http://" + ConstCkan.CkanIP + "/dataset/" + name);
+                                                    eqList.Add(eq);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                                 reader.Close();
                                 reader.Dispose();
-
                             }
                         }
                     }

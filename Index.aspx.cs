@@ -23,40 +23,41 @@ namespace WebApplication2
         }
 
 
-        protected void Button1_Click1(object sender, EventArgs e)
+        protected void UploadBtn_Click(object sender, EventArgs e)
         {
 
+            // Check if there is no date
+            if (uploaddatepicker.Value == "")
+                return;
 
+            // Check if there is no time
+            if (uploadtimepicker.Value == "")
+                return;
+
+            // Check if there is no file name
+            if (uploadName.Text == "")
+                return;
+
+            // Check if there is no file
+            if (!FileUp.HasFile)
+                return;
+
+            //  uploaddatepicker Example : 2016-04-01
+            string[] date_ = uploaddatepicker.Value.Split('-');
+            string date = date_[0] + date_[1] + date_[2];
+
+            // uploadtimepicker Example : 14 : 06
+            string time = uploadtimepicker.Value.ElementAt(0).ToString() + uploadtimepicker.Value.ElementAt(1).ToString() + 
+                        uploadtimepicker.Value.ElementAt(3).ToString() + uploadtimepicker.Value.ElementAt(4).ToString();
+
+
+            string datasetName = date + time;
             if (FileUp.HasFile)
             {
-                UploadFile upF = new UploadFile();
-
-                //using (var stream1 = File.Open("C:\\Users\\NeetFish\\Documents\\hi.txt", FileMode.Open))
-                using (var stream1 = FileUp.FileContent)
-                {
-                    var files = new[]
-                    {
-                        new UploadFile
-                        {
-                            Name = "upload",
-                            //Filename = "hi.txt",
-                            Filename = FileUp.FileName,
-                            ContentType = "text/plain",
-                            Stream = stream1
-                        }
-                    };
-
-                    var values = new NameValueCollection
-                    {
-                        { "package_id", "earthquake" },
-                        { "url", "" },
-                        { "name", uploadName.Text },
-                    };
-
-                    byte[] result = upF.UploadFiles("http://140.109.17.71/api/action/resource_create", files, values);
-                }
+                FileUploader.Upload(FileUp.FileContent, FileUp.FileName, datasetName, uploadName.Text);
             }
         }
-            
+
+
     }
 }

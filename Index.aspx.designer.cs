@@ -22,6 +22,24 @@ namespace WebApplication2 {
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
         
         /// <summary>
+        /// uploaddatepicker 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText uploaddatepicker;
+        
+        /// <summary>
+        /// uploadtimepicker 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText uploadtimepicker;
+        
+        /// <summary>
         /// uploadName 控制項。
         /// </summary>
         /// <remarks>
@@ -40,21 +58,21 @@ namespace WebApplication2 {
         protected global::System.Web.UI.WebControls.FileUpload FileUp;
         
         /// <summary>
-        /// DropDownList1 控制項。
+        /// DropDownList2 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList DropDownList1;
+        protected global::System.Web.UI.WebControls.DropDownList DropDownList2;
         
         /// <summary>
-        /// upload_Btn 控制項。
+        /// UploadBtn 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button upload_Btn;
+        protected global::System.Web.UI.WebControls.Button UploadBtn;
     }
 }
